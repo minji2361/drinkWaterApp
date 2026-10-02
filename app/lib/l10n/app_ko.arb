@@ -465,5 +465,19 @@
     }
   },
   "unlockGo": "꾸며보기",
-  "unlockLater": "나중에"
+  "unlockLater": "나중에",
+  "reminderChannelName": "물 마시기 알림",
+  "reminderChannelDescription": "설정한 시간대에 물 마시기를 알려줘요",
+  "reminderMsg1": "화분이 목말라 해요 🌱",
+  "reminderMsg2": "물 한 잔 마시고 화분에 물 주러 와요 💧",
+  "reminderMsg3": "한 모금씩, 꽃이 필 때까지 🌸",
+  "reminderMsg4": "잠깐 쉬면서 물 한 잔 어때요?",
+  "reminderMsgRemaining": "오늘 목표까지 {ml}ml 남았어요",
+  "@reminderMsgRemaining": {
+    "placeholders": {
+      "ml": {
+        "type": "String"
+      }
+    }
+  }
 }

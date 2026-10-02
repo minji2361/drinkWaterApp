@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/enums.dart';
 import '../../../core/utils/date_utils.dart';
+import '../../notification/data/reminder_service.dart';
 import '../data/intake_repository.dart';
 import '../domain/intake_rules.dart';
 import '../domain/repeat_guard.dart';
@@ -124,6 +125,7 @@ class HomeController extends Notifier<HomeUiState> {
       if (trackGuard) {
         _guard.record(now, id: result.ids.first, amountMl: amountMl);
       }
+      _refreshReminders();
       return Recorded(result);
     } on IntakeBlocked catch (e) {
       _endCooldown();
@@ -137,7 +139,11 @@ class HomeController extends Notifier<HomeUiState> {
   Future<void> undo(List<int> ids) async {
     await _repo.undo(ids);
     _guard.remove(ids);
+    _refreshReminders();
   }
+
+  /// 기록·되돌리기 후 다음 알림 시각을 다시 계산한다 (기획서 5.5). 결과를 기다리지 않는다.
+  void _refreshReminders() => unawaited(ref.read(reminderServiceProvider).refresh());
 
   Future<void> selectCup(CupType type) => _repo.setDefaultCup(type);
 

@@ -12,6 +12,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/date_utils.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../decorate/presentation/decorate_providers.dart';
+import '../../notification/data/reminder_service.dart';
 import '../data/intake_repository.dart';
 import '../domain/growth_stage.dart';
 import '../domain/intake_rules.dart';
@@ -57,6 +58,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   Future<void> _refreshDate() async {
     await ref.read(currentDateProvider.notifier).refresh();
+    // 새 날짜의 알림을 채우고 예약 범위를 앞으로 민다.
+    await ref.read(reminderServiceProvider).refresh();
     _scheduleMidnight();
   }
 

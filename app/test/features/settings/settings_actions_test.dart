@@ -5,9 +5,9 @@ import 'package:drink_water_app/core/database/app_database.dart';
 import 'package:drink_water_app/core/database/database_provider.dart';
 import 'package:drink_water_app/core/utils/date_utils.dart';
 import 'package:drink_water_app/features/home/data/intake_repository.dart';
+import 'package:drink_water_app/features/notification/data/reminder_scheduler.dart';
 import 'package:drink_water_app/features/settings/data/backup_file_gateway.dart';
 import 'package:drink_water_app/features/settings/data/backup_service.dart';
-import 'package:drink_water_app/features/settings/data/reminder_scheduler.dart';
 import 'package:drink_water_app/features/settings/presentation/settings_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,21 +27,28 @@ class _FakeGateway implements BackupFileGateway {
   Future<String?> pickJson() async => toPick;
 }
 
-class _GrantingScheduler implements ReminderScheduler {
+class _FakeScheduler implements ReminderScheduler {
+  _FakeScheduler(this.permission);
+
+  final ReminderPermission permission;
   bool enabled = false;
-  int rescheduled = 0;
+  int replaced = 0;
+  int cancelled = 0;
 
   @override
-  Future<ReminderPermission> enable() async {
-    enabled = true;
-    return ReminderPermission.granted;
+  Future<ReminderPermission> requestPermission() async {
+    enabled = permission == ReminderPermission.granted;
+    return permission;
   }
 
   @override
-  Future<void> disable() async => enabled = false;
+  Future<void> cancelAll() async {
+    enabled = false;
+    cancelled++;
+  }
 
   @override
-  Future<void> reschedule(AppSettingsRow settings) async => rescheduled++;
+  Future<void> replaceAll(List<ReminderNotification> items) async => replaced++;
 }
 
 void main() {
@@ -165,15 +172,38 @@ void main() {
   });
 
   group('알림 설정', () {
-    test('스케줄러가 없으면 켜지지 않는다 (기본 구현)', () async {
-      final r = await actions().setReminderEnabled(true);
+    test('알림을 지원하지 않는 환경이면 켜지지 않는다', () async {
+      final c = ProviderContainer(overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        clockProvider.overrideWithValue(() => now),
+        reminderSchedulerProvider
+            .overrideWithValue(_FakeScheduler(ReminderPermission.unavailable)),
+      ]);
+      addTearDown(c.dispose);
+
+      final r = await c.read(settingsActionsProvider).setReminderEnabled(true);
       expect(r, ReminderToggleResult.unavailable);
-      final s = await db.select(db.appSettings).getSingle();
-      expect(s.reminderEnabled, isFalse);
+      expect((await db.select(db.appSettings).getSingle()).reminderEnabled,
+          isFalse);
     });
 
-    test('권한이 허용되면 저장하고 재예약한다. 시간대·간격 변경도 재예약', () async {
-      final scheduler = _GrantingScheduler();
+    test('권한이 거부되면 켜지지 않는다', () async {
+      final c = ProviderContainer(overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        clockProvider.overrideWithValue(() => now),
+        reminderSchedulerProvider
+            .overrideWithValue(_FakeScheduler(ReminderPermission.denied)),
+      ]);
+      addTearDown(c.dispose);
+
+      final r = await c.read(settingsActionsProvider).setReminderEnabled(true);
+      expect(r, ReminderToggleResult.denied);
+      expect((await db.select(db.appSettings).getSingle()).reminderEnabled,
+          isFalse);
+    });
+
+    test('권한이 허용되면 저장하고 예약한다. 시간대·간격 변경도 다시 예약', () async {
+      final scheduler = _FakeScheduler(ReminderPermission.granted);
       final c = ProviderContainer(overrides: [
         appDatabaseProvider.overrideWithValue(db),
         clockProvider.overrideWithValue(() => now),
@@ -183,11 +213,11 @@ void main() {
       final a = c.read(settingsActionsProvider);
 
       expect(await a.setReminderEnabled(true), ReminderToggleResult.enabled);
-      expect(scheduler.rescheduled, 1);
+      expect(scheduler.replaced, 1);
 
       await a.setReminderRange('09:00', '21:00');
       await a.setReminderInterval(180);
-      expect(scheduler.rescheduled, 3);
+      expect(scheduler.replaced, 3);
       final s = await db.select(db.appSettings).getSingle();
       expect(s.reminderEnabled, isTrue);
       expect(s.reminderStart, '09:00');
@@ -196,6 +226,7 @@ void main() {
 
       expect(await a.setReminderEnabled(false), ReminderToggleResult.disabled);
       expect(scheduler.enabled, isFalse);
+      expect(scheduler.cancelled, 1);
       expect((await db.select(db.appSettings).getSingle()).reminderEnabled,
           isFalse);
     });

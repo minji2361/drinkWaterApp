@@ -4,10 +4,11 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../../../core/database/enums.dart';
 import '../../../core/utils/date_utils.dart';
 import '../../home/presentation/home_providers.dart';
+import '../../notification/data/reminder_scheduler.dart';
+import '../../notification/data/reminder_service.dart';
 import '../../onboarding/domain/goal_calculator.dart';
 import '../data/backup_file_gateway.dart';
 import '../data/backup_service.dart';
-import '../data/reminder_scheduler.dart';
 import '../data/settings_repository.dart';
 
 class ProfileInput {
@@ -129,16 +130,17 @@ class SettingsActions {
   // ---- 알림 ---------------------------------------------------------------
 
   Future<ReminderToggleResult> setReminderEnabled(bool enabled) async {
-    final scheduler = _ref.read(reminderSchedulerProvider);
+    final service = _ref.read(reminderServiceProvider);
     if (!enabled) {
-      await scheduler.disable();
+      await service.disable();
       await _repo.setReminderEnabled(false);
       return ReminderToggleResult.disabled;
     }
-    switch (await scheduler.enable()) {
+    // OS 권한은 사용자가 설정에서 알림을 직접 켤 때 요청한다 (기획서 5.5).
+    switch (await service.requestPermission()) {
       case ReminderPermission.granted:
         await _repo.setReminderEnabled(true);
-        await scheduler.reschedule(await _repo.getSettings());
+        await service.refresh();
         return ReminderToggleResult.enabled;
       case ReminderPermission.denied:
         return ReminderToggleResult.denied;
@@ -149,19 +151,12 @@ class SettingsActions {
 
   Future<void> setReminderRange(String start, String end) async {
     await _repo.setReminderRange(start, end);
-    await _reschedule();
+    await _ref.read(reminderServiceProvider).refresh();
   }
 
   Future<void> setReminderInterval(int minutes) async {
     await _repo.setReminderInterval(minutes);
-    await _reschedule();
-  }
-
-  Future<void> _reschedule() async {
-    final s = await _repo.getSettings();
-    if (s.reminderEnabled) {
-      await _ref.read(reminderSchedulerProvider).reschedule(s);
-    }
+    await _ref.read(reminderServiceProvider).refresh();
   }
 
   // ---- 데이터 -------------------------------------------------------------
@@ -179,12 +174,14 @@ class SettingsActions {
     if (json == null) return false;
     await _ref.read(backupServiceProvider).importJson(json);
     await _ref.read(currentDateProvider.notifier).refresh();
+    await _ref.read(reminderServiceProvider).refresh();
     return true;
   }
 
   Future<void> deleteAllRecords() async {
     await _ref.read(backupServiceProvider).deleteAllRecords();
     await _ref.read(currentDateProvider.notifier).refresh();
+    await _ref.read(reminderServiceProvider).refresh();
   }
 }
 

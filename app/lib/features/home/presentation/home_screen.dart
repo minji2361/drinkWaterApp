@@ -12,6 +12,7 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/date_utils.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../decorate/presentation/decorate_providers.dart';
+import '../data/intake_repository.dart';
 import '../domain/growth_stage.dart';
 import '../domain/intake_rules.dart';
 import 'home_controller.dart';
@@ -154,13 +155,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         ),
       ),
     );
-  }
-
-  void _comingSoon(BuildContext context) {
-    ScaffoldMessenger.of(context)
-      ..clearSnackBars()
-      ..showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context).commonComingSoon)));
   }
 
   String _limitMessage(AppLocalizations l10n, LimitKind kind) =>

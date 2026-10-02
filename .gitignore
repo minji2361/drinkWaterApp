@@ -25,3 +25,10 @@ pubspec.lock
 .vscode/
 *.iml
 .DS_Store
+
+# Generated localizations (flutter gen-l10n)
+app/lib/l10n/app_localizations*.dart
+
+# 환경 설정 (비밀 값). 예시 파일만 커밋한다.
+app/config/dart_defines*.json
+!app/config/dart_defines.example.json

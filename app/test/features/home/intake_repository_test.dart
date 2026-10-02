@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:drink_water_app/core/database/app_database.dart';
 import 'package:drink_water_app/features/home/data/intake_repository.dart';

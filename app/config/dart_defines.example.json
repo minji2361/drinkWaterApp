@@ -1,0 +1,9 @@
+{
+  "APP_ENV": "dev",
+  "SUPABASE_URL": "",
+  "SUPABASE_ANON_KEY": "",
+  "API_BASE_URL": "",
+  "ANALYTICS_ENABLED": false,
+  "CRASH_REPORTING_ENABLED": false,
+  "CLOUD_BACKUP_ENABLED": false
+}

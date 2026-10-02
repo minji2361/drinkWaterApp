@@ -82,7 +82,7 @@ class OnboardingState {
       );
 }
 
-class OnboardingController extends Notifier<OnboardingState> {
+class OnboardingController extends AutoDisposeNotifier<OnboardingState> {
   @override
   OnboardingState build() => const OnboardingState();
 

@@ -24,7 +24,7 @@ class DecorateState {
 
 /// 꾸미기 화면 상태. 되돌리기 스택은 화면에 머무는 동안만 유지하고 이탈 시 폐기한다
 /// (autoDispose). 재진입 시 이전 스택을 복원하지 않는다 (기획서 S3).
-class DecorateController extends Notifier<DecorateState> {
+class DecorateController extends AutoDisposeNotifier<DecorateState> {
   DecorationRepository get _repo => ref.read(decorationRepositoryProvider);
 
   @override

@@ -106,7 +106,7 @@ class DecoratedPot extends StatelessWidget {
                 height: s * 0.05,
                 decoration: BoxDecoration(
                   color: ItemArt.cheek(item(DecorationCategory.cheek)!.id)
-                      .withOpacity(0.75),
+                      .withValues(alpha: 0.75),
                   borderRadius: BorderRadius.circular(s),
                 ),
               ),

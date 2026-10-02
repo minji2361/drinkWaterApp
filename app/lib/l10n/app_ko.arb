@@ -5,5 +5,54 @@
   "todayCups": "오늘 {count}잔 마셨어요",
   "@todayCups": {
     "placeholders": { "count": { "type": "int" } }
-  }
+  },
+
+  "commonBack": "뒤로",
+  "commonCancel": "취소",
+  "commonConfirm": "확인",
+
+  "onboardingStepIndicator": "{current} / {total}",
+  "@onboardingStepIndicator": {
+    "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "onboardingNext": "다음",
+  "onboardingStart": "시작하기",
+  "onboardingSaveFailed": "저장에 실패했어요. 다시 시도해 주세요",
+
+  "onboardingNicknameTitle": "어떻게 불러드릴까요?",
+  "onboardingNicknameSubtitle": "화분이 불러줄 이름이에요.",
+  "onboardingNicknameLabel": "별명",
+  "onboardingNicknameError": "별명을 1~10자로 입력해 주세요",
+
+  "onboardingProfileTitle": "나에 대해 알려주세요",
+  "onboardingProfileSubtitle": "하루 권장 음수량을 계산하는 데만 사용해요.",
+  "onboardingGenderLabel": "성별",
+  "onboardingGenderMale": "남성",
+  "onboardingGenderFemale": "여성",
+  "onboardingGenderUnspecified": "선택 안 함",
+  "onboardingAgeLabel": "나이",
+  "onboardingAgeSuffix": "세",
+  "onboardingAgeError": "만 14세 이상만 이용할 수 있어요",
+  "onboardingHeightLabel": "키 (선택)",
+  "onboardingHeightSuffix": "cm",
+  "onboardingHeightError": "키를 확인해 주세요",
+  "onboardingWeightLabel": "몸무게",
+  "onboardingWeightSuffix": "kg",
+  "onboardingWeightError": "몸무게를 확인해 주세요",
+
+  "onboardingGoalTitle": "하루 목표를\n정해볼까요?",
+  "onboardingGoalSubtitle": "체중을 기준으로 계산한 권장량이에요. 원하는 값으로 바꿀 수 있어요.",
+  "onboardingGoalUnit": "ml",
+  "onboardingGoalAdjustMinus": "− {step}ml",
+  "@onboardingGoalAdjustMinus": { "placeholders": { "step": { "type": "int" } } },
+  "onboardingGoalAdjustPlus": "+ {step}ml",
+  "@onboardingGoalAdjustPlus": { "placeholders": { "step": { "type": "int" } } },
+  "onboardingGoalRange": "설정 가능 범위 {min} ~ {max}ml",
+  "@onboardingGoalRange": {
+    "placeholders": { "min": { "type": "String" }, "max": { "type": "String" } }
+  },
+  "onboardingGoalInputTitle": "목표 직접 입력",
+  "onboardingGoalInputError": "500~4,000ml 사이로 입력해 주세요",
+
+  "medicalDisclaimer": "본 앱의 권장 음수량은 일반적인 참고 정보이며 의학적 조언이 아닙니다. 신장 질환·심부전 등 질환이 있거나 임신 중인 경우 반드시 의료 전문가와 상담하세요."
 }

@@ -14,7 +14,7 @@ void main() {
   });
 
   test('렌더링 순서: 배경→화분→식물→볼→입→코→눈→머리장식', () {
-    final z = DecorationRules.zIndex;
+    const z = DecorationRules.zIndex;
     final order = [
       z[DecorationCategory.background]!,
       z[DecorationCategory.pot]!,

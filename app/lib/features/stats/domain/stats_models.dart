@@ -1,4 +1,4 @@
-/// 통계 화면용 값 객체. 화면·저장소와 무관한 순수 Dart 모델이다.
+// 통계 화면용 값 객체. 화면·저장소와 무관한 순수 Dart 모델이다.
 
 enum StatsPeriod { day, week, month }
 

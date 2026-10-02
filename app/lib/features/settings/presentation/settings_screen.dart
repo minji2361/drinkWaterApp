@@ -298,11 +298,12 @@ class SettingsScreen extends ConsumerWidget {
                 title: Text(l10n.settingsReminderInterval),
                 children: [
                   for (final m in const [60, 120, 180])
-                    RadioListTile<int>(
-                      value: m,
-                      groupValue: s.reminderIntervalMin,
+                    ListTile(
                       title: Text(l10n.settingsHours(m ~/ 60)),
-                      onChanged: (v) => Navigator.of(context).pop(v),
+                      trailing: m == s.reminderIntervalMin
+                          ? const Icon(Icons.check, color: AppColors.primary)
+                          : null,
+                      onTap: () => Navigator.of(context).pop(m),
                     ),
                 ],
               ),

@@ -45,9 +45,8 @@ jobs:
       - name: Generate Drift code
         run: dart run build_runner build --delete-conflicting-outputs
 
-      # info 수준(예: 사용 중단 예고)은 실패로 보지 않는다. 경고·오류는 실패한다.
       - name: Analyze
-        run: flutter analyze --no-fatal-infos
+        run: flutter analyze
 
       - name: Test
         run: flutter test

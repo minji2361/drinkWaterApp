@@ -146,7 +146,7 @@ class _Cell extends StatelessWidget {
           color: done
               ? Colors.white
               : cell.isFuture
-                  ? AppColors.textSecondary.withOpacity(0.5)
+                  ? AppColors.textSecondary.withValues(alpha: 0.5)
                   : AppColors.textPrimary,
         ),
       ),

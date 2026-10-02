@@ -56,7 +56,10 @@ enum UnlockType {
   final String value;
 }
 
-class _ValueConverter<T extends Enum> extends TypeConverter<T, String> {
+/// enum ↔ 문자열 변환. JSON(백업 내보내기/가져오기)에서도 같은 문자열 값을 쓰도록
+/// [JsonTypeConverter2]를 함께 구현한다. 없으면 `toJson()`이 enum 객체를 그대로 내보내 인코딩에 실패한다.
+class _ValueConverter<T extends Enum> extends TypeConverter<T, String>
+    with JsonTypeConverter2<T, String, String> {
   const _ValueConverter(this._values, this._valueOf);
 
   final List<T> _values;
@@ -68,6 +71,12 @@ class _ValueConverter<T extends Enum> extends TypeConverter<T, String> {
 
   @override
   String toSql(T value) => _valueOf(value);
+
+  @override
+  T fromJson(String json) => fromSql(json);
+
+  @override
+  String toJson(T value) => toSql(value);
 }
 
 const genderConverter =

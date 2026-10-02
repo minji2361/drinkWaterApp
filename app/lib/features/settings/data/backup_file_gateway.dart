@@ -23,16 +23,18 @@ class PlatformBackupFileGateway implements BackupFileGateway {
     final dir = await getTemporaryDirectory();
     final file = File(p.join(dir.path, fileName));
     await file.writeAsString(json);
-    await Share.shareXFiles([XFile(file.path, mimeType: 'application/json')]);
+    await SharePlus.instance.share(
+      ShareParams(files: [XFile(file.path, mimeType: 'application/json')]),
+    );
   }
 
   @override
   Future<String?> pickJson() async {
-    final result = await FilePicker.platform.pickFiles(
+    final picked = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: const ['json'],
     );
-    final path = result?.files.single.path;
+    final path = picked?.path;
     if (path == null) return null;
     return File(path).readAsString();
   }

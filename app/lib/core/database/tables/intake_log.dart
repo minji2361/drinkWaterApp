@@ -5,6 +5,7 @@ import '../enums.dart';
 /// 물 기록. 기록 1건 = 1잔. amount_ml이 모든 집계의 기준이다.
 /// 되돌리기는 soft delete가 아닌 물리 삭제.
 @TableIndex(name: 'idx_intake_log_date', columns: {#logDate})
+@DataClassName('IntakeLogRow')
 class IntakeLog extends Table {
   IntColumn get id => integer().autoIncrement()();
 

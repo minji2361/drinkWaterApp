@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 /// 일별 집계. goal_ml을 함께 저장해 목표 변경이 과거 달성 여부를 소급 변경하지 않게 한다.
+@DataClassName('DailySummaryRow')
 class DailySummary extends Table {
   /// `YYYY-MM-DD`
   TextColumn get logDate => text().withLength(min: 10, max: 10)();

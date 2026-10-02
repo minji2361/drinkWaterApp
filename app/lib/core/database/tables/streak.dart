@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 /// 단일 행 (id = 1).
+@DataClassName('StreakRow')
 class Streak extends Table {
   IntColumn get id => integer().withDefault(const Constant(1))();
   IntColumn get currentStreak => integer().withDefault(const Constant(0))();

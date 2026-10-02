@@ -13,6 +13,11 @@ class AppColors {
   static const noticeBackground = Color(0xFFFFF0C8);
   static const noticeText = Color(0xFF6B4E00);
   static const error = Color(0xFFB3402F);
+
+  // 통계 차트 (UI 시안)
+  static const chartLight = Color(0xFFC3DDDF);
+  static const chartMid = Color(0xFF7FB9C2);
+  static const target = Color(0xFFD98324);
 }
 
 ThemeData buildAppTheme() {

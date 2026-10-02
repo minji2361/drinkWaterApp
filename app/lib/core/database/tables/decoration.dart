@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import '../enums.dart';
 
 /// 아이템 마스터. z_index와 앵커 좌표는 카테고리별 앱 상수로 관리하므로 두지 않는다.
+@DataClassName('DecorationItemRow')
 class DecorationItem extends Table {
   TextColumn get id => text()();
   TextColumn get category => text().map(decorationCategoryConverter)();
@@ -22,6 +23,7 @@ class DecorationItem extends Table {
 }
 
 /// 장착 상태. 카테고리당 1행 고정 (최대 7행).
+@DataClassName('UserDecorationRow')
 class UserDecoration extends Table {
   TextColumn get category => text().map(decorationCategoryConverter)();
 
@@ -35,6 +37,7 @@ class UserDecoration extends Table {
 }
 
 /// 해금 이력.
+@DataClassName('UserUnlockedItemRow')
 class UserUnlockedItem extends Table {
   TextColumn get itemId => text().references(DecorationItem, #id)();
   DateTimeColumn get unlockedAt => dateTime().withDefault(currentDateAndTime)();

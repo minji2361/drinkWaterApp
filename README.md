@@ -19,7 +19,7 @@
 ## 현재 상태
 
 기획서에 정의된 6개 화면과 핵심 로직의 코드 작성을 마쳤다. **다만 아직 실기기·에뮬레이터에서 실행해 본 적은 없다.**
-(`android/`, `ios/` 폴더가 아직 없고, 검증은 GitHub Actions의 분석·테스트로만 하고 있다.)
+(Android·iOS 플랫폼 폴더를 만들고 알림용 네이티브 설정까지 넣었지만, 검증은 분석·테스트와 Android 디버그 빌드까지만 했다. iOS 빌드는 아직 확인하지 못했다.)
 
 ### 구현 완료
 
@@ -32,6 +32,8 @@
 | 꾸미기 S3 | 즉시 적용 + 20단계 되돌리기, 카테고리 7종, 해금 조건 안내, 화분 기준 고정 앵커 | S3 |
 | 통계 S4 | 일간(2시간 단위) / 주간(목표선) / 월간(히트맵), 기간 이동·스와이프 | S4 |
 | 설정 S5 / S5-1 | 프로필 수정과 목표 재계산, 기본 컵 설정, JSON 내보내기·가져오기, 전체 삭제(2단계 확인) | S5 |
+| 로컬 알림 | 활동 시간대·간격 예약, 기록 후 재계산, 달성 시 당일 취소, OS 권한 요청 | 5.5 |
+| 플랫폼 | `android/`, `ios/` 생성, 세로 고정, 알림 권한·수신기·desugaring·AppDelegate 설정 | 9장 |
 | 다국어 구조 | 모든 문구를 ARB로 외부화 (한국어 1종) | 3.2 |
 | 환경 설정 | 서버·외부 도구 연결용 `--dart-define` 구조 (기본값은 전부 꺼짐) | 3.1 |
 | CI | GitHub Actions: 의존성 → 코드 생성 → `flutter analyze` → `flutter test` | — |
@@ -40,8 +42,10 @@
 
 | 항목 | 상태 |
 |---|---|
-| 플랫폼 폴더 | `android/`, `ios/` 미생성 → `flutter create .` 필요 |
-| 로컬 알림 | 설정값 저장까지만 구현. 권한 요청·예약·기록 시 재계산은 `ReminderScheduler` 인터페이스만 있음. 알림 토글을 켜면 "준비 중" 안내 |
+| 번들 ID | `com.example.drink_water_app` 임시값. **스토어 제출 전에 확정해 바꿔야 한다** (Android `applicationId`/`namespace`, iOS Bundle Identifier) |
+| 앱 아이콘·스플래시 | Flutter 기본 이미지 |
+| iPad | 태블릿 대응은 하지 않음 (기획서 9장). iPad 방향 설정은 기본값 그대로 |
+| 로컬 알림 | 구현·네이티브 설정까지 완료. **실기기에서 울리는지는 미확인** (제조사별 배터리 최적화 등) |
 | 분석·크래시 | Firebase Analytics / Crashlytics 미연동 (기획서 8장 이벤트 로깅 없음) |
 | 화분 애니메이션 | Rive 미적용. 이모지 자리표시자 + 물 붓기 효과 |
 | 아이템 그림 | 임시 도형·이모지 (`item_art.dart` 한 곳을 바꾸면 에셋으로 교체) |
@@ -141,11 +145,10 @@ app/lib/
 
 ## 시작하기
 
-사전 준비: Flutter SDK (CI는 stable 채널 사용).
+사전 준비: Flutter SDK (CI는 stable 채널 사용, 현재 3.47.6으로 확인). Android 빌드에는 Android SDK, iOS 빌드에는 macOS와 Xcode가 필요하다.
 
 ```bash
 cd app
-flutter create . --project-name drink_water_app   # android/, ios/ 생성 (최초 1회)
 flutter pub get
 flutter gen-l10n                                  # 문구 코드 생성
 dart run build_runner build                       # Drift 코드 생성
@@ -153,7 +156,8 @@ flutter run
 ```
 
 - 생성 파일(`*.g.dart`, `app_localizations*.dart`)은 `.gitignore` 대상이라 위 명령으로 만든다.
-- `flutter create` 시 번들 ID(`--org`)는 확정된 값에 맞춰 지정한다.
+- 플랫폼 폴더는 이미 생성되어 있다. 번들 ID는 임시값(`com.example.drink_water_app`)이므로 확정되면 바꾼다.
+- 알림용 네이티브 설정은 이미 들어 있다. 내용은 [app/README.md](app/README.md)의 "알림 플랫폼 설정" 참고.
 
 ### 검증
 
@@ -163,7 +167,7 @@ flutter analyze
 flutter test
 ```
 
-CI(`.github/workflows/ci.yml`)가 같은 순서로 push와 `main` 대상 PR마다 실행한다. 테스트는 14개 파일, 107개 케이스이며 DB 스키마, 권장량 계산, 물 기록 규칙(상한·스트릭·되돌리기), 통계 집계, 설정·백업, 꾸미기 규칙을 다룬다.
+CI(`.github/workflows/ci.yml`)가 같은 순서로 push와 `main` 대상 PR마다 실행하고, 별도 작업으로 `flutter build apk --debug`까지 확인한다(iOS 빌드는 아직 CI에 없음). 테스트는 14개 파일, 107개 케이스이며 DB 스키마, 권장량 계산, 물 기록 규칙(상한·스트릭·되돌리기), 통계 집계, 설정·백업, 꾸미기 규칙을 다룬다.
 
 ### 환경 설정 (서버·외부 도구)
 
@@ -189,8 +193,8 @@ CI를 도입하기 전까지는 코드를 한 번도 컴파일해 본 적이 없
 
 ## 다음 작업 후보
 
-1. 실기기에서 첫 실행 (`flutter create .` 후) — 화면 동작·마이그레이션 확인
-2. 로컬 알림 구현 (권한 요청, 예약, 기록 시 재계산, 달성 후 취소)
+1. 실기기에서 첫 실행 — 화면 동작·마이그레이션·알림 도착 확인
+2. 번들 ID 확정과 앱 아이콘·스플래시 교체
 3. Firebase Analytics / Crashlytics 연동과 기획서 8장 이벤트 로깅
 4. Rive 화분 애니메이션과 실제 아이템·컵 에셋 적용
 5. 이용약관·개인정보처리방침·문의하기 연결

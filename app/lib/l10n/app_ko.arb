@@ -205,5 +205,116 @@
   "limitTotal": "오늘은 충분히 마셨어요. 과도한 수분 섭취는 오히려 몸에 부담이 될 수 있어요.",
   "limitCount": "오늘 기록은 여기까지예요. 내일 다시 만나요 🌱",
   "celebrateTitle": "오늘 목표 달성! 🌸",
-  "celebrateFastNote": "한 번에 많은 양을 기록했어요. 물은 조금씩 나눠 마시는 게 몸에 더 좋아요 🌱"
+  "celebrateFastNote": "한 번에 많은 양을 기록했어요. 물은 조금씩 나눠 마시는 게 몸에 더 좋아요 🌱",
+  "statsTitle": "통계",
+  "statsPeriodDay": "일간",
+  "statsPeriodWeek": "주간",
+  "statsPeriodMonth": "월간",
+  "wdMon": "월",
+  "wdTue": "화",
+  "wdWed": "수",
+  "wdThu": "목",
+  "wdFri": "금",
+  "wdSat": "토",
+  "wdSun": "일",
+  "statsToday": "오늘",
+  "statsTodayShort": "오늘",
+  "statsDateLabel": "{month}월 {day}일 ({suffix})",
+  "@statsDateLabel": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      },
+      "suffix": {
+        "type": "String"
+      }
+    }
+  },
+  "statsWeekLabel": "{startMonth}월 {startDay}일 – {endMonth}월 {endDay}일",
+  "@statsWeekLabel": {
+    "placeholders": {
+      "startMonth": {
+        "type": "int"
+      },
+      "startDay": {
+        "type": "int"
+      },
+      "endMonth": {
+        "type": "int"
+      },
+      "endDay": {
+        "type": "int"
+      }
+    }
+  },
+  "statsMonthLabel": "{year}년 {month}월",
+  "@statsMonthLabel": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      }
+    }
+  },
+  "statsDailyChartTitle": "시간대별 섭취량",
+  "statsDailyChartUnit": "2시간 단위 · ml",
+  "statsHourAxis": "시각 (시)",
+  "statsWeeklyChartTitle": "요일별 섭취량",
+  "statsUnitMl": "단위 ml",
+  "statsGoalLine": "목표 {goal}",
+  "@statsGoalLine": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "statsLegendAchieved": "목표 달성",
+  "statsLegendMissed": "미달성",
+  "statsHeatNone": "기록 없음",
+  "statsHeatLow": "50% 미만",
+  "statsHeatMid": "50~99%",
+  "statsHeatDone": "목표 달성",
+  "statsTotalToday": "오늘 총량",
+  "statsTotal": "총량",
+  "statsVsGoal": "목표 대비",
+  "statsLogCount": "기록 횟수",
+  "statsFirstLast": "첫 / 마지막 기록",
+  "statsWeekAvg": "주 평균",
+  "statsMonthAvg": "월 평균",
+  "statsAchievedDays": "달성일",
+  "statsMaxMin": "최다 / 최소",
+  "statsLongestStreak": "최장 연속",
+  "statsPercent": "{percent}%",
+  "@statsPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "statsCountTimes": "{count}회",
+  "@statsCountTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsDaysUnit": "{count}일",
+  "@statsDaysUnit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsEmpty": "아직 기록이 없어요",
+  "statsFewDays": "3일 이상 기록하면 더 정확한 추이를 볼 수 있어요",
+  "statsLoadError": "통계를 불러오지 못했어요"
 }

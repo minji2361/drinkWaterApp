@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/database/enums.dart';
+import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/date_utils.dart';
 import '../../../l10n/app_localizations.dart';
@@ -138,7 +140,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   _RoundAction(
                     icon: Icons.bar_chart_rounded,
                     label: l10n.homeStats,
-                    onTap: () => _comingSoon(context),
+                    onTap: () => context.push(AppRoutes.stats),
                   ),
                 ],
               ),

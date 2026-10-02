@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/data/onboarding_repository.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
+import '../../features/stats/presentation/stats_screen.dart';
 
 class AppRoutes {
   const AppRoutes._();
@@ -12,6 +13,7 @@ class AppRoutes {
   static const splash = '/splash';
   static const onboarding = '/onboarding';
   static const home = '/';
+  static const stats = '/stats';
 }
 
 /// 온보딩 완료 여부에 따라 S1 / S2로 분기한다 (기획서 4.2).
@@ -48,6 +50,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.home,
         builder: (_, __) => const HomeScreen(),
+        routes: [
+          // S2 위에 push되며 뒤로가기 시 S2로 복귀한다 (기획서 4.2).
+          GoRoute(
+            path: 'stats',
+            builder: (_, __) => const StatsScreen(),
+          ),
+        ],
       ),
     ],
   );

@@ -19,7 +19,7 @@ class StatsState {
       );
 }
 
-class StatsController extends Notifier<StatsState> {
+class StatsController extends AutoDisposeNotifier<StatsState> {
   @override
   StatsState build() => StatsState(
         period: StatsPeriod.day,

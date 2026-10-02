@@ -1,0 +1,9 @@
+{
+  "@@locale": "ko",
+  "appName": "물마시GO",
+  "@appName": { "description": "앱 이름 (가칭, 기획서 13장 #1)" },
+  "todayCups": "오늘 {count}잔 마셨어요",
+  "@todayCups": {
+    "placeholders": { "count": { "type": "int" } }
+  }
+}

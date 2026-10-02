@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/app_database.dart';
+import '../../../core/database/decoration_seed.dart';
 import '../../../core/database/database_provider.dart';
 
 /// 백업 파일이 올바르지 않거나 이 앱 버전에서 읽을 수 없는 경우.
@@ -95,6 +96,8 @@ class BackupService {
         b.insertAll(_db.userUnlockedItem,
             parsed.unlocked.where((u) => masterIds.contains(u.itemId)));
       });
+      // 기본 지급·기본 장착이 빠진 백업도 정상 상태가 되도록 보정한다.
+      await seedDecorations(_db);
     });
   }
 
@@ -124,7 +127,11 @@ class BackupService {
 
       final profiles = table('user_profile', UserProfileRow.fromJson);
       final streaks = table('streak', StreakRow.fromJson);
-      final settings = table('app_settings', AppSettingsRow.fromJson);
+      // 스키마 v1 백업에는 없는 컬럼은 기본값으로 채운다.
+      final settings = table('app_settings', (m) {
+        m.putIfAbsent('decorateHintSeen', () => false);
+        return AppSettingsRow.fromJson(m);
+      });
       if (profiles.length != 1 || streaks.length != 1 || settings.length != 1) {
         throw const BackupFormatException('프로필·설정 데이터가 올바르지 않습니다.');
       }

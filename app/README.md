@@ -28,7 +28,7 @@ cd app
 flutter create . --org com.example --project-name drink_water_app
 flutter pub get
 flutter gen-l10n
-dart run build_runner build   # Drift 코드 생성 (DB 정의 추가 후)
+dart run build_runner build   # Drift 코드 생성 (app_database.g.dart, 커밋하지 않음)
 flutter run
 ```
 

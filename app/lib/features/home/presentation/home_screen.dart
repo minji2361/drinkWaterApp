@@ -95,7 +95,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             children: [
               _TopBar(
                 streak: streak?.currentStreak ?? 0,
-                onSettings: () => _comingSoon(context),
+                onSettings: () => context.push(AppRoutes.settings),
               ),
               const SizedBox(height: 16),
               _ProgressCard(

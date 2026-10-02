@@ -316,5 +316,114 @@
   },
   "statsEmpty": "아직 기록이 없어요",
   "statsFewDays": "3일 이상 기록하면 더 정확한 추이를 볼 수 있어요",
-  "statsLoadError": "통계를 불러오지 못했어요"
+  "statsLoadError": "통계를 불러오지 못했어요",
+  "commonNext": "다음",
+  "settingsTitle": "설정",
+  "settingsSectionProfile": "프로필",
+  "settingsSectionReminder": "알림",
+  "settingsSectionRecord": "기록",
+  "settingsSectionEtc": "기타",
+  "settingsNickname": "별명",
+  "settingsGenderAge": "성별 / 나이",
+  "settingsGenderAgeValue": "{gender} / {age}세",
+  "@settingsGenderAgeValue": {
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      },
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHeight": "키 (선택)",
+  "settingsHeightNone": "입력 안 함",
+  "settingsDailyGoal": "일일 목표량",
+  "settingsRecalc": "권장량 재계산",
+  "settingsRecalcAskTitle": "목표량을 다시 계산할까요?",
+  "settingsRecalcAskMessage": "바뀐 정보로 계산한 권장량은 {goal}ml예요. 직접 정한 목표량을 이 값으로 바꿀까요?",
+  "@settingsRecalcAskMessage": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGoalAutoUpdated": "목표량이 {goal}ml로 바뀌었어요",
+  "@settingsGoalAutoUpdated": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsSaveFailed": "저장에 실패했어요. 다시 시도해 주세요",
+  "settingsReminderEnabled": "알림 사용",
+  "settingsReminderRange": "활동 시간대",
+  "settingsReminderStart": "시작 시각",
+  "settingsReminderEnd": "종료 시각",
+  "settingsReminderRangeError": "시작 시각이 종료 시각보다 빨라야 해요",
+  "settingsReminderInterval": "알림 간격",
+  "settingsHours": "{count}시간",
+  "@settingsHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsReminderUnavailable": "알림 기능은 아직 준비 중이에요",
+  "settingsReminderDenied": "알림 권한이 꺼져 있어요. 기기 설정에서 허용해 주세요",
+  "settingsDefaultCup": "기본 컵",
+  "settingsExport": "데이터 내보내기",
+  "settingsImport": "데이터 가져오기",
+  "settingsImportValue": "파일 선택",
+  "settingsExportFailed": "내보내기에 실패했어요",
+  "settingsImportConfirm": "현재 기록과 설정이 백업 파일의 내용으로 바뀌어요. 계속할까요?",
+  "settingsImportDone": "백업을 복원했어요",
+  "settingsImportInvalid": "올바른 백업 파일이 아니에요",
+  "settingsImportFailed": "가져오기에 실패했어요. 다시 시도해 주세요",
+  "settingsDeleteAll": "전체 기록 삭제",
+  "settingsDeleteAllValue": "2단계 확인",
+  "settingsDeleteAllWarning": "모든 물 기록과 연속 달성 기록이 삭제되고 되돌릴 수 없어요. 프로필과 설정은 유지돼요.",
+  "settingsDeleteKeyword": "삭제",
+  "settingsDeleteTypePrompt": "계속하려면 \"{keyword}\"를 입력해 주세요",
+  "@settingsDeleteTypePrompt": {
+    "placeholders": {
+      "keyword": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsDeleteButton": "삭제",
+  "settingsDeleteDone": "모든 기록을 삭제했어요",
+  "settingsAppVersion": "앱 버전",
+  "settingsTerms": "이용약관",
+  "settingsPrivacy": "개인정보처리방침",
+  "settingsContact": "문의하기",
+  "cupSettingsTitle": "기본 컵",
+  "cupSettingsGuide": "자주 쓰는 컵을 고르면, 물 마시기 버튼을 짧게 탭할 때 그 양이 기록돼요. 컵 용량은 내 컵에 맞게 바꿀 수 있어요.",
+  "cupSettingsDefaultHint": "기본 {ml}ml",
+  "@cupSettingsDefaultHint": {
+    "placeholders": {
+      "ml": {
+        "type": "int"
+      }
+    }
+  },
+  "cupSettingsOtherHint": "직접 정한 양",
+  "cupSettingsRange": "용량 설정 범위 10 ~ 2,000ml (10ml 단위)",
+  "cupSettingsCurrent": "지금 설정",
+  "cupSettingsCurrentValue": "짧게 탭하면 {cup} {ml}ml가 기록돼요",
+  "@cupSettingsCurrentValue": {
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "ml": {
+        "type": "int"
+      }
+    }
+  },
+  "cupSettingsNote": "기록은 ml로 저장되어 통계와 목표 계산은 그대로예요"
 }

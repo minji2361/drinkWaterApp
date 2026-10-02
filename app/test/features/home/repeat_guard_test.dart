@@ -66,6 +66,16 @@ void main() {
       expect(IntakeRules.reached(totalMl: 3999, logCount: 29), isNull);
     });
 
+    test('컵 용량 직접 입력: 범위 밖은 거부, 10ml 단위로 반올림 (S5-1)', () {
+      expect(IntakeRules.normalizeCupMl(5), isNull);
+      expect(IntakeRules.normalizeCupMl(2001), isNull);
+      expect(IntakeRules.normalizeCupMl(10), 10);
+      expect(IntakeRules.normalizeCupMl(2000), 2000);
+      expect(IntakeRules.normalizeCupMl(254), 250);
+      expect(IntakeRules.normalizeCupMl(255), 260);
+      expect(IntakeRules.normalizeCupMl(1996), 2000);
+    });
+
     test('컵 용량: 10~2,000ml, 10ml 단위', () {
       expect(IntakeRules.isValidCupMl(10), isTrue);
       expect(IntakeRules.isValidCupMl(2000), isTrue);

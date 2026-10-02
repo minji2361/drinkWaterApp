@@ -11,6 +11,7 @@ import '../../../core/router/app_router.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/date_utils.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../decorate/presentation/decorate_providers.dart';
 import '../domain/growth_stage.dart';
 import '../domain/intake_rules.dart';
 import 'home_controller.dart';
@@ -105,8 +106,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               Expanded(
                 child: Center(
                   child: GestureDetector(
-                    onTap: () => _comingSoon(context),
-                    child: PlantView(stage: stage, pourSeq: _pourSeq),
+                    onTap: () => context.push(AppRoutes.decorate),
+                    child: PlantView(
+                      stage: stage,
+                      pourSeq: _pourSeq,
+                      equipped: ref.watch(equippedItemsProvider),
+                    ),
                   ),
                 ),
               ),
@@ -134,7 +139,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   _RoundAction(
                     icon: Icons.local_florist_outlined,
                     label: l10n.homeDecorate,
-                    onTap: () => _comingSoon(context),
+                    onTap: () => context.push(AppRoutes.decorate),
                   ),
                   const SizedBox(width: 40),
                   _RoundAction(
@@ -227,6 +232,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
           ));
         if (result.celebrate) await _celebrate(result.fastAchieve);
+        if (result.newlyUnlocked.isNotEmpty) {
+          await _showUnlocked(result.newlyUnlocked.length);
+        }
       case RecordLimitReached(:final kind):
         messenger
           ..clearSnackBars()
@@ -238,6 +246,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       case RecordCooldown() || RecordNeedsConfirm():
         break;
     }
+  }
+
+  /// 새 아이템 해금 안내. [꾸며보기]로 S3에 바로 이동한다 (기획서 S3).
+  Future<void> _showUnlocked(int count) async {
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context);
+    final go = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.unlockCelebrateTitle),
+        content: Text(l10n.unlockCelebrateMessage(count)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n.unlockLater),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(l10n.unlockGo),
+          ),
+        ],
+      ),
+    );
+    if (go == true && mounted) context.push(AppRoutes.decorate);
   }
 
   /// 개화 축하. 물 붓기(1.2초)와 성장 연출이 끝난 뒤 표시한다 (기획서 5.3).

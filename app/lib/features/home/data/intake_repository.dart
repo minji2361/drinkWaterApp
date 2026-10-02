@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/app_database.dart';
+import '../../../core/database/decoration_seed.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/utils/date_utils.dart';
 import '../domain/intake_rules.dart';
@@ -23,6 +24,7 @@ class IntakeResult {
     required this.justAchieved,
     required this.celebrate,
     required this.fastAchieve,
+    this.newlyUnlocked = const [],
   });
 
   /// 생성된 intake_log id (묶음이면 여러 건).
@@ -39,6 +41,9 @@ class IntakeResult {
 
   /// 목표를 첫 기록 후 10분 이내에 달성했는지 (기획서 5.6.5).
   final bool fastAchieve;
+
+  /// 이번 달성으로 새로 해금된 꾸미기 아이템 (기획서 S3 해금 조건).
+  final List<DecorationItemRow> newlyUnlocked;
 }
 
 extension CupSettings on AppSettingsRow {
@@ -158,9 +163,11 @@ class IntakeRepository {
       final justAchieved = !before.isAchieved && summary.totalMl >= summary.goalMl;
       var celebrate = false;
       var fast = false;
+      var unlocked = <DecorationItemRow>[];
 
       if (justAchieved) {
         await _applyAchievement(date);
+        unlocked = await grantEligibleUnlocks(_db);
         // 과다 섭취는 성취로 연출하지 않는다 (기획서 5.1).
         celebrate = !before.celebrated && summary.totalMl <= IntakeRules.maxDailyMl;
         final first = summary.firstLoggedAt;
@@ -184,6 +191,7 @@ class IntakeRepository {
         justAchieved: justAchieved,
         celebrate: celebrate,
         fastAchieve: fast,
+        newlyUnlocked: unlocked,
       );
     });
   }

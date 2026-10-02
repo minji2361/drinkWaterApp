@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import 'decoration_seed.dart';
 import 'enums.dart';
 import 'tables/app_settings.dart';
 import 'tables/daily_summary.dart';
@@ -36,7 +37,7 @@ class AppDatabase extends _$AppDatabase {
   /// 스키마 버전을 올릴 때는 반드시 [onUpgrade] 마이그레이션을 작성한다.
   /// 테이블·컬럼 삭제는 금지 (기획서 7.2).
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -45,10 +46,14 @@ class AppDatabase extends _$AppDatabase {
           await _seedSingletons();
         },
         onUpgrade: (m, from, to) async {
-          // v1 → v2부터 단계별 마이그레이션을 여기에 추가한다.
+          if (from < 2) {
+            await m.addColumn(appSettings, appSettings.decorateHintSeen);
+          }
         },
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = ON');
+          // 아이템 마스터·기본 지급·기본 장착 (멱등)
+          await seedDecorations(this);
         },
       );
 

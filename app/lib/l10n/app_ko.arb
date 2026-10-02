@@ -425,5 +425,45 @@
       }
     }
   },
-  "cupSettingsNote": "기록은 ml로 저장되어 통계와 목표 계산은 그대로예요"
+  "cupSettingsNote": "기록은 ml로 저장되어 통계와 목표 계산은 그대로예요",
+  "decorateTitle": "식물 꾸미기",
+  "decorateUndo": "되돌리기",
+  "decorateHint": "고르면 바로 적용돼요",
+  "decorateLockedHint": "잠긴 아이템을 누르면 해금 조건을 알려줘요",
+  "decorateSaveFailed": "저장에 실패했어요. 다시 시도해 주세요",
+  "decorCatBackground": "배경",
+  "decorCatPot": "화분",
+  "decorCatEyes": "눈",
+  "decorCatNose": "코",
+  "decorCatMouth": "입",
+  "decorCatCheek": "볼",
+  "decorCatHeadwear": "머리",
+  "unlockStreak": "{days}일 연속 달성 시 열려요",
+  "@unlockStreak": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "unlockTotalDays": "총 {days}일 달성 시 열려요",
+  "@unlockTotalDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "unlockOther": "특별한 조건을 채우면 열려요",
+  "unlockCelebrateTitle": "새로운 아이템이 열렸어요 🎁",
+  "unlockCelebrateMessage": "아이템 {count}개가 열렸어요. 지금 꾸며볼까요?",
+  "@unlockCelebrateMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unlockGo": "꾸며보기",
+  "unlockLater": "나중에"
 }

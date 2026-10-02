@@ -60,11 +60,14 @@ void main() {
   });
 
   test('user_decoration은 존재하지 않는 아이템을 참조할 수 없다', () async {
+    // 기본 장착 행이 이미 있으므로 upsert로 외래키 위반만 검증한다.
     await expectLater(
-      db.into(db.userDecoration).insert(UserDecorationCompanion.insert(
-            category: DecorationCategory.eyes,
-            itemId: const Value('missing'),
-          )),
+      db.into(db.userDecoration).insertOnConflictUpdate(
+            UserDecorationCompanion.insert(
+              category: DecorationCategory.eyes,
+              itemId: const Value('missing'),
+            ),
+          ),
       throwsA(anything),
     );
   });

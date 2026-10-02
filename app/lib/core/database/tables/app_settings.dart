@@ -28,6 +28,10 @@ class AppSettings extends Table {
   IntColumn get cupTumblerMl => integer().withDefault(const Constant(500))();
   IntColumn get cupOtherMl => integer().withDefault(const Constant(350))();
 
+  /// 꾸미기 첫 진입 안내("고르면 바로 적용돼요")를 이미 보여줬는지 (스키마 v2).
+  BoolColumn get decorateHintSeen =>
+      boolean().withDefault(const Constant(false))();
+
   @override
   Set<Column> get primaryKey => {id};
 

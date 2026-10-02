@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/decorate/presentation/decorate_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/data/onboarding_repository.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
@@ -16,6 +17,7 @@ class AppRoutes {
   static const onboarding = '/onboarding';
   static const home = '/';
   static const stats = '/stats';
+  static const decorate = '/decorate';
   static const settings = '/settings';
   static const settingsCup = '/settings/cup';
 }
@@ -59,6 +61,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'stats',
             builder: (_, __) => const StatsScreen(),
+          ),
+          GoRoute(
+            path: 'decorate',
+            builder: (_, __) => const DecorateScreen(),
           ),
           GoRoute(
             path: 'settings',

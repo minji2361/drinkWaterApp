@@ -25,3 +25,6 @@ pubspec.lock
 .vscode/
 *.iml
 .DS_Store
+
+# Generated localizations (flutter gen-l10n)
+app/lib/l10n/app_localizations*.dart

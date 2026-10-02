@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/database/enums.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/intake_repository.dart';
@@ -75,7 +76,7 @@ class _RecordSheetState extends ConsumerState<RecordSheet> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () => _editVolume(context, cup, ml),
+                  onPressed: _openCupSettings,
                   child: Text(l10n.sheetEditVolume),
                 ),
               ],
@@ -163,13 +164,11 @@ class _RecordSheetState extends ConsumerState<RecordSheet> {
     );
   }
 
-  Future<void> _editVolume(BuildContext context, CupType cup, int ml) async {
-    final controller = ref.read(homeControllerProvider.notifier);
-    final value = await showDialog<int>(
-      context: context,
-      builder: (_) => _VolumeDialog(initial: ml),
-    );
-    if (value != null) await controller.updateCupMl(cup, value);
+  /// 용량 수정은 S5-1(기본 컵 설정)에서 한다 (기획서 S5-1 진입 경로).
+  void _openCupSettings() {
+    final router = GoRouter.of(context);
+    Navigator.of(context).pop();
+    router.push(AppRoutes.settingsCup);
   }
 }
 
@@ -214,94 +213,6 @@ class _CupCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// 컵 용량 수정 (10~2,000ml, 10ml 단위). −/+는 50ml 단위, 숫자는 직접 입력.
-class _VolumeDialog extends StatefulWidget {
-  const _VolumeDialog({required this.initial});
-  final int initial;
-
-  @override
-  State<_VolumeDialog> createState() => _VolumeDialogState();
-}
-
-class _VolumeDialogState extends State<_VolumeDialog> {
-  late final TextEditingController _text =
-      TextEditingController(text: '${widget.initial}');
-  bool _error = false;
-
-  @override
-  void dispose() {
-    _text.dispose();
-    super.dispose();
-  }
-
-  void _adjust(int delta) {
-    final current = int.tryParse(_text.text) ?? widget.initial;
-    final next =
-        (current + delta).clamp(IntakeRules.minCupMl, IntakeRules.maxCupMl);
-    setState(() {
-      _text.text = '$next';
-      _error = false;
-    });
-  }
-
-  void _submit() {
-    final value = int.tryParse(_text.text);
-    if (value == null || !IntakeRules.isValidCupMl(value)) {
-      setState(() => _error = true);
-      return;
-    }
-    Navigator.of(context).pop(value);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return AlertDialog(
-      title: Text(l10n.volumeDialogTitle),
-      content: Row(
-        children: [
-          IconButton.filledTonal(
-            onPressed: () => _adjust(-IntakeRules.cupAdjustStepMl),
-            icon: const Icon(Icons.remove),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: _text,
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(4),
-              ],
-              decoration: InputDecoration(
-                suffixText: 'ml',
-                errorText: _error ? l10n.volumeError : null,
-              ),
-              onChanged: (_) {
-                if (_error) setState(() => _error = false);
-              },
-              onSubmitted: (_) => _submit(),
-            ),
-          ),
-          const SizedBox(width: 8),
-          IconButton.filledTonal(
-            onPressed: () => _adjust(IntakeRules.cupAdjustStepMl),
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(l10n.commonCancel),
-        ),
-        TextButton(onPressed: _submit, child: Text(l10n.commonConfirm)),
-      ],
     );
   }
 }

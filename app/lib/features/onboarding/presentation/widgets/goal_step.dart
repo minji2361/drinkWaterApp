@@ -7,7 +7,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/goal_calculator.dart';
 import '../onboarding_controller.dart';
-import 'medical_notice.dart';
+import '../../../../core/widgets/medical_notice.dart';
 
 class GoalStep extends ConsumerWidget {
   const GoalStep({super.key});

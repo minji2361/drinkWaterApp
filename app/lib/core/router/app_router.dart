@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/data/onboarding_repository.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
+import '../../features/settings/presentation/cup_settings_screen.dart';
+import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/stats/presentation/stats_screen.dart';
 
 class AppRoutes {
@@ -14,6 +16,8 @@ class AppRoutes {
   static const onboarding = '/onboarding';
   static const home = '/';
   static const stats = '/stats';
+  static const settings = '/settings';
+  static const settingsCup = '/settings/cup';
 }
 
 /// 온보딩 완료 여부에 따라 S1 / S2로 분기한다 (기획서 4.2).
@@ -55,6 +59,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'stats',
             builder: (_, __) => const StatsScreen(),
+          ),
+          GoRoute(
+            path: 'settings',
+            builder: (_, __) => const SettingsScreen(),
+            routes: [
+              GoRoute(
+                path: 'cup',
+                builder: (_, __) => const CupSettingsScreen(),
+              ),
+            ],
           ),
         ],
       ),

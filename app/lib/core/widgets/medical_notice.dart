@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_theme.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../theme/app_theme.dart';
+import '../../l10n/app_localizations.dart';
 
 /// 의학 고지 문구 (기획서 5.1). 목표 설정 단계와 설정 화면에 상시 노출한다.
 class MedicalNotice extends StatelessWidget {

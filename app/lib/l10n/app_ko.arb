@@ -1,29 +1,38 @@
 {
   "@@locale": "ko",
   "appName": "물마시GO",
-  "@appName": { "description": "앱 이름 (가칭, 기획서 13장 #1)" },
+  "@appName": {
+    "description": "앱 이름 (가칭, 기획서 13장 #1)"
+  },
   "todayCups": "오늘 {count}잔 마셨어요",
   "@todayCups": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
-
   "commonBack": "뒤로",
   "commonCancel": "취소",
   "commonConfirm": "확인",
-
   "onboardingStepIndicator": "{current} / {total}",
   "@onboardingStepIndicator": {
-    "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } }
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   },
   "onboardingNext": "다음",
   "onboardingStart": "시작하기",
   "onboardingSaveFailed": "저장에 실패했어요. 다시 시도해 주세요",
-
   "onboardingNicknameTitle": "어떻게 불러드릴까요?",
   "onboardingNicknameSubtitle": "화분이 불러줄 이름이에요.",
   "onboardingNicknameLabel": "별명",
   "onboardingNicknameError": "별명을 1~10자로 입력해 주세요",
-
   "onboardingProfileTitle": "나에 대해 알려주세요",
   "onboardingProfileSubtitle": "하루 권장 음수량을 계산하는 데만 사용해요.",
   "onboardingGenderLabel": "성별",
@@ -39,20 +48,162 @@
   "onboardingWeightLabel": "몸무게",
   "onboardingWeightSuffix": "kg",
   "onboardingWeightError": "몸무게를 확인해 주세요",
-
   "onboardingGoalTitle": "하루 목표를\n정해볼까요?",
   "onboardingGoalSubtitle": "체중을 기준으로 계산한 권장량이에요. 원하는 값으로 바꿀 수 있어요.",
   "onboardingGoalUnit": "ml",
   "onboardingGoalAdjustMinus": "− {step}ml",
-  "@onboardingGoalAdjustMinus": { "placeholders": { "step": { "type": "int" } } },
+  "@onboardingGoalAdjustMinus": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      }
+    }
+  },
   "onboardingGoalAdjustPlus": "+ {step}ml",
-  "@onboardingGoalAdjustPlus": { "placeholders": { "step": { "type": "int" } } },
+  "@onboardingGoalAdjustPlus": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      }
+    }
+  },
   "onboardingGoalRange": "설정 가능 범위 {min} ~ {max}ml",
   "@onboardingGoalRange": {
-    "placeholders": { "min": { "type": "String" }, "max": { "type": "String" } }
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
   },
   "onboardingGoalInputTitle": "목표 직접 입력",
   "onboardingGoalInputError": "500~4,000ml 사이로 입력해 주세요",
-
-  "medicalDisclaimer": "본 앱의 권장 음수량은 일반적인 참고 정보이며 의학적 조언이 아닙니다. 신장 질환·심부전 등 질환이 있거나 임신 중인 경우 반드시 의료 전문가와 상담하세요."
+  "medicalDisclaimer": "본 앱의 권장 음수량은 일반적인 참고 정보이며 의학적 조언이 아닙니다. 신장 질환·심부전 등 질환이 있거나 임신 중인 경우 반드시 의료 전문가와 상담하세요.",
+  "commonComingSoon": "준비 중이에요",
+  "cupPaper": "종이컵",
+  "cupMug": "머그컵",
+  "cupTumbler": "텀블러",
+  "cupOther": "기타",
+  "homeProgress": "오늘 마신 물: {current}ml / 목표 {goal}ml",
+  "@homeProgress": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "homeStreak": "{count}일 연속",
+  "@homeStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeGrowthStage": "성장 단계 {stage}",
+  "@homeGrowthStage": {
+    "placeholders": {
+      "stage": {
+        "type": "int"
+      }
+    }
+  },
+  "homeDrinkButton": "{cup} {ml}ml 마시기",
+  "@homeDrinkButton": {
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "ml": {
+        "type": "int"
+      }
+    }
+  },
+  "homeSummaryHint": "오늘 {count}잔 마셨어요 · 짧게 탭 {ml}ml, 길게 누르면 컵 선택",
+  "@homeSummaryHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "ml": {
+        "type": "int"
+      }
+    }
+  },
+  "homeDecorate": "식물 꾸미기",
+  "homeStats": "통계",
+  "homeRecorded": "{ml}ml 기록했어요",
+  "@homeRecorded": {
+    "placeholders": {
+      "ml": {
+        "type": "int"
+      }
+    }
+  },
+  "homeUndo": "되돌리기",
+  "homeRecordFailed": "기록에 실패했어요. 다시 시도해 주세요",
+  "sheetTitle": "어떤 컵으로 마셨나요?",
+  "sheetSubtitle": "고른 컵이 기본 컵으로 저장돼요",
+  "sheetEditVolume": "용량 수정",
+  "sheetCupCount": "잔 수",
+  "sheetCupSummary": "{cup} {ml}ml × {count}잔 = {total}ml",
+  "@sheetCupSummary": {
+    "placeholders": {
+      "cup": {
+        "type": "String"
+      },
+      "ml": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "sheetConfirm": "{total}ml 기록하기",
+  "@sheetConfirm": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "sheetSplitNote": "{ml}ml {count}건으로 나뉘어 저장돼요",
+  "@sheetSplitNote": {
+    "placeholders": {
+      "ml": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "volumeDialogTitle": "컵 용량 수정",
+  "volumeError": "10~2,000ml 사이, 10ml 단위로 입력해 주세요",
+  "repeatMessage": "방금 1분 동안 {count}잔({ml}ml)을 기록했어요.\n정말 더 마셨나요?",
+  "@repeatMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "ml": {
+        "type": "int"
+      }
+    }
+  },
+  "repeatBulk": "여러 잔을 한 번에 기록하기",
+  "repeatOne": "네, 1잔 더 기록",
+  "limitTotal": "오늘은 충분히 마셨어요. 과도한 수분 섭취는 오히려 몸에 부담이 될 수 있어요.",
+  "limitCount": "오늘 기록은 여기까지예요. 내일 다시 만나요 🌱",
+  "celebrateTitle": "오늘 목표 달성! 🌸",
+  "celebrateFastNote": "한 번에 많은 양을 기록했어요. 물은 조금씩 나눠 마시는 게 몸에 더 좋아요 🌱"
 }

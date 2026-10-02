@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import '../enums.dart';
 
 /// 단일 행 (id = 1). 나이는 저장하지 않고 birth_year로 계산한다.
+@DataClassName('UserProfileRow')
 class UserProfile extends Table {
   IntColumn get id => integer().withDefault(const Constant(1))();
   TextColumn get nickname => text().withLength(min: 1, max: 10)();

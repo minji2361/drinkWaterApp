@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import '../enums.dart';
 
 /// 단일 행 (id = 1).
+@DataClassName('AppSettingsRow')
 class AppSettings extends Table {
   IntColumn get id => integer().withDefault(const Constant(1))();
 

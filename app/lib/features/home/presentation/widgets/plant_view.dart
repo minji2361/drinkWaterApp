@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/database/app_database.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../decorate/domain/joy_motion.dart';
 import '../../../decorate/presentation/widgets/decorated_pot.dart';
 import '../../../../l10n/app_localizations.dart';
 
 /// 화분 영역 자리표시자. 성장 단계별 이모지로 대신하며, Rive 에셋이 준비되면 교체한다.
 ///
 /// 기록 시 물 붓기 연출(1.2초)을 재생하고, 단계가 올라가는 경우 물 붓기 뒤에
-/// 성장 연출을 이어서 보여준다. 단계가 내려가는 경우(되돌리기)는 즉시 반영한다 (기획서 5.3).
+/// 성장 연출(화분이 기뻐하며 통통 튀는 모션)을 이어서 보여준다. 5단계(개화)는 더 크게 축하한다.
+/// 단계가 내려가는 경우(되돌리기)는 모션 없이 즉시 반영한다 (기획서 5.3).
+/// 시스템의 '애니메이션 줄이기' 설정이 켜져 있으면 튀는 모션은 생략한다.
 class PlantView extends StatefulWidget {
   const PlantView({
     super.key,
@@ -31,13 +34,14 @@ class PlantView extends StatefulWidget {
   State<PlantView> createState() => _PlantViewState();
 }
 
-class _PlantViewState extends State<PlantView>
-    with SingleTickerProviderStateMixin {
+class _PlantViewState extends State<PlantView> with TickerProviderStateMixin {
   static const _pourDuration = Duration(milliseconds: 1200);
 
   late final AnimationController _pour =
       AnimationController(vsync: this, duration: _pourDuration);
+  late final AnimationController _joy = AnimationController(vsync: this);
   late int _shownStage = widget.stage;
+  double _joyStrength = JoyMotion.intensity;
   Timer? _stageTimer;
 
   @override
@@ -48,7 +52,9 @@ class _PlantViewState extends State<PlantView>
       _stageTimer?.cancel();
       if (widget.stage > old.stage && widget.pourSeq != old.pourSeq) {
         _stageTimer = Timer(_pourDuration, () {
-          if (mounted) setState(() => _shownStage = widget.stage);
+          if (!mounted) return;
+          setState(() => _shownStage = widget.stage);
+          _playJoy(widget.stage);
         });
       } else {
         _shownStage = widget.stage;
@@ -56,9 +62,19 @@ class _PlantViewState extends State<PlantView>
     }
   }
 
+  /// 성장한 순간 화분이 기뻐하는 모션을 재생한다. 개화(5단계)는 더 크고 길다.
+  void _playJoy(int stage) {
+    if (MediaQuery.of(context).disableAnimations) return;
+    final bloom = stage >= 5;
+    _joyStrength = bloom ? JoyMotion.bloomIntensity : JoyMotion.intensity;
+    _joy.duration = bloom ? JoyMotion.bloomDuration : JoyMotion.duration;
+    _joy.forward(from: 0);
+  }
+
   @override
   void dispose() {
     _stageTimer?.cancel();
+    _joy.dispose();
     _pour.dispose();
     super.dispose();
   }
@@ -72,10 +88,18 @@ class _PlantViewState extends State<PlantView>
         Stack(
           alignment: Alignment.center,
           children: [
-            DecoratedPot(
-              stage: _shownStage,
-              equipped: widget.equipped,
-              size: 280,
+            AnimatedBuilder(
+              animation: _joy,
+              builder: (_, __) {
+                final t = _joy.value;
+                final running = t > 0 && t < 1;
+                return DecoratedPot(
+                  stage: _shownStage,
+                  equipped: widget.equipped,
+                  size: 280,
+                  joy: running ? JoyMotion.at(t, strength: _joyStrength) : null,
+                );
+              },
             ),
             AnimatedBuilder(
               animation: _pour,

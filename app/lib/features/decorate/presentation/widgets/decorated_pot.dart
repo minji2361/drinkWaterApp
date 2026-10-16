@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/database/app_database.dart';
 import '../../domain/decoration_rules.dart';
+import '../../domain/joy_motion.dart';
 import 'item_art.dart';
 
 /// 화분 + 식물 + 꾸미기 아이템 합성 (기획서 S3). 홈과 꾸미기 미리보기가 같이 쓴다.
@@ -16,6 +17,7 @@ class DecoratedPot extends StatelessWidget {
     required this.stage,
     required this.equipped,
     this.size = 280,
+    this.joy,
   });
 
   /// 성장 단계 1~5.
@@ -26,6 +28,10 @@ class DecoratedPot extends StatelessWidget {
 
   /// 정사각 캔버스 한 변.
   final double size;
+
+  /// 성장 시 기뻐하는 모션의 현재 프레임. 배경을 뺀 화분 전체가 화분 바닥을 기준으로 함께 움직인다.
+  /// null이거나 [JoyFrame.rest]이면 정지 상태.
+  final JoyFrame? joy;
 
   static const _plantEmoji = ['🌰', '🌱', '🌿', '🌷', '🌸'];
 
@@ -170,13 +176,34 @@ class DecoratedPot extends StatelessWidget {
         ],
     };
 
+    final background = layers.remove(DecorationRules.zIndex[DecorationCategory.background]!)!;
     final order = layers.keys.toList()..sort();
+    Widget potGroup = Stack(children: [
+      for (final z in order) ...layers[z]!,
+    ]);
+
+    final j = joy;
+    if (j != null) {
+      // 화분 바닥(캔버스 높이의 약 92%)을 축으로 움직여 바닥에서 튀어 오르는 느낌을 준다.
+      potGroup = Transform.translate(
+        offset: Offset(0, j.dy * s),
+        child: Transform(
+          alignment: const Alignment(0, 0.84),
+          transform: Matrix4.identity()
+            ..rotateZ(j.angle)
+            ..multiply(Matrix4.diagonal3Values(j.scaleX, j.scaleY, 1.0)),
+          child: potGroup,
+        ),
+      );
+    }
+
     return IgnorePointer(
       child: SizedBox(
         width: s,
         height: s,
         child: Stack(children: [
-          for (final z in order) ...layers[z]!,
+          ...background,
+          Positioned.fill(child: potGroup),
         ]),
       ),
     );

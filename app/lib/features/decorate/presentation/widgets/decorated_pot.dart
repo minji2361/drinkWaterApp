@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/database/app_database.dart';
-import '../../domain/decoration_rules.dart';
 import '../../domain/joy_motion.dart';
 import 'item_art.dart';
+import 'pot_art.dart';
 
 /// 화분 + 식물 + 꾸미기 아이템 합성 (기획서 S3). 홈과 꾸미기 미리보기가 같이 쓴다.
 ///
@@ -23,7 +23,7 @@ class DecoratedPot extends StatelessWidget {
   /// 성장 단계 1~5.
   final int stage;
 
-  /// 카테고리 → 장착 아이템 (null = 해제).
+  /// 카테고리 → 장착 아이템 (null = 로딩 중이라 기본 아이템으로 그린다).
   final Map<DecorationCategory, DecorationItemRow?>? equipped;
 
   /// 정사각 캔버스 한 변.
@@ -33,156 +33,49 @@ class DecoratedPot extends StatelessWidget {
   /// null이거나 [JoyFrame.rest]이면 정지 상태.
   final JoyFrame? joy;
 
-  static const _plantEmoji = ['🌰', '🌱', '🌿', '🌷', '🌸'];
+  /// true면 기쁨 모션이 재생되는 동안 표정이 "신난 얼굴"로 바뀐다.
+  static const happyWhileJoy = true;
 
   @override
   Widget build(BuildContext context) {
     final e = equipped;
     final s = size;
 
-    // 화분 기하. 모든 앵커가 이 영역에서 계산된다.
-    final potWidth = s * 0.52;
-    final potHeight = s * 0.40;
-    final potLeft = (s - potWidth) / 2;
-    final potTop = s * 0.52;
-    final rimHeight = potHeight * 0.22;
-    final bodyTop = potTop + rimHeight;
-    final bodyHeight = potHeight - rimHeight;
-    final bodyWidth = potWidth * 0.9;
-    final bodyLeft = (s - bodyWidth) / 2;
+    // equipped가 아직 없으면(로딩) 기본 아이템, 있으면 null은 "해제"로 본다.
+    String? id(DecorationCategory c, String? fallback) =>
+        e == null ? fallback : e[c]?.id;
 
-    Widget at(FaceAnchor a, Widget child) => Positioned(
-          left: bodyLeft + a.dx * bodyWidth,
-          top: bodyTop + a.dy * bodyHeight,
-          child: FractionalTranslation(
-            translation: const Offset(-0.5, -0.5),
-            child: child,
-          ),
-        );
-
-    DecorationItemRow? item(DecorationCategory c) => e?[c];
-
-    final layers = <int, List<Widget>>{
-      DecorationRules.zIndex[DecorationCategory.background]!: [
-        Positioned.fill(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: ItemArt.background(
-                  item(DecorationCategory.background)?.id ?? 'bg_1'),
-              shape: BoxShape.circle,
-            ),
+    final j = joy;
+    final art = Stack(children: [
+      Positioned.fill(
+        child: CustomPaint(
+          painter: PotArtPainter(
+            stage: stage,
+            potId: id(DecorationCategory.pot, 'pot_1') ?? 'pot_1',
+            eyesId: id(DecorationCategory.eyes, 'eyes_1'),
+            noseId: id(DecorationCategory.nose, null),
+            mouthId: id(DecorationCategory.mouth, 'mouth_1'),
+            cheekId: id(DecorationCategory.cheek, 'cheek_1'),
+            happy: happyWhileJoy && j != null,
           ),
         ),
-      ],
-      DecorationRules.zIndex[DecorationCategory.pot]!: [
-        Positioned(
-          left: potLeft - potWidth * 0.04,
-          top: potTop,
-          child: _Pot(
-            color: ItemArt.pot(item(DecorationCategory.pot)?.id ?? 'pot_1'),
-            width: potWidth * 1.08,
-            height: potHeight,
-            rimHeight: rimHeight,
-          ),
-        ),
-      ],
-      DecorationRules.plantZIndex: [
+      ),
+      if (id(DecorationCategory.headwear, null) != null)
+        // 머리장식은 식물이 아니라 화분 테두리 위에 놓여 개화해도 꽃을 가리지 않는다.
         Positioned(
           left: 0,
           right: 0,
-          bottom: s - potTop - s * 0.03,
+          top: s * 0.45,
           child: Center(
             child: Text(
-              _plantEmoji[(stage - 1).clamp(0, 4)],
-              style: TextStyle(fontSize: s * 0.30, height: 1),
+              ItemArt.headwear(id(DecorationCategory.headwear, null)!),
+              style: TextStyle(fontSize: s * 0.11, height: 1),
             ),
           ),
         ),
-      ],
-      if (item(DecorationCategory.cheek) != null)
-        DecorationRules.zIndex[DecorationCategory.cheek]!: [
-          for (final a in [
-            DecorationAnchors.cheekLeft,
-            DecorationAnchors.cheekRight
-          ])
-            at(
-              a,
-              Container(
-                width: s * 0.07,
-                height: s * 0.05,
-                decoration: BoxDecoration(
-                  color: ItemArt.cheek(item(DecorationCategory.cheek)!.id)
-                      .withValues(alpha: 0.75),
-                  borderRadius: BorderRadius.circular(s),
-                ),
-              ),
-            ),
-        ],
-      if (item(DecorationCategory.mouth) != null)
-        DecorationRules.zIndex[DecorationCategory.mouth]!: [
-          at(
-            DecorationAnchors.mouth,
-            Text(
-              ItemArt.mouth(item(DecorationCategory.mouth)!.id),
-              style: TextStyle(
-                  fontSize: s * 0.08,
-                  height: 1,
-                  color: const Color(0xFF3A2A22),
-                  fontWeight: FontWeight.w700),
-            ),
-          ),
-        ],
-      if (item(DecorationCategory.nose) != null)
-        DecorationRules.zIndex[DecorationCategory.nose]!: [
-          at(
-            DecorationAnchors.nose,
-            Text(
-              ItemArt.nose(item(DecorationCategory.nose)!.id),
-              style: TextStyle(
-                  fontSize: s * 0.05,
-                  height: 1,
-                  color: const Color(0xFF3A2A22)),
-            ),
-          ),
-        ],
-      if (item(DecorationCategory.eyes) != null)
-        DecorationRules.zIndex[DecorationCategory.eyes]!: [
-          at(
-            DecorationAnchors.eyes,
-            Text(
-              ItemArt.eyes(item(DecorationCategory.eyes)!.id),
-              style: TextStyle(
-                  fontSize: s * 0.075,
-                  height: 1,
-                  color: const Color(0xFF2B2320),
-                  fontWeight: FontWeight.w700),
-            ),
-          ),
-        ],
-      if (item(DecorationCategory.headwear) != null)
-        DecorationRules.zIndex[DecorationCategory.headwear]!: [
-          // 머리장식은 식물이 아니라 화분 테두리 위에 놓여 개화해도 꽃을 가리지 않는다.
-          Positioned(
-            left: 0,
-            right: 0,
-            top: potTop - s * 0.07,
-            child: Center(
-              child: Text(
-                ItemArt.headwear(item(DecorationCategory.headwear)!.id),
-                style: TextStyle(fontSize: s * 0.11, height: 1),
-              ),
-            ),
-          ),
-        ],
-    };
-
-    final background = layers.remove(DecorationRules.zIndex[DecorationCategory.background]!)!;
-    final order = layers.keys.toList()..sort();
-    Widget potGroup = Stack(children: [
-      for (final z in order) ...layers[z]!,
     ]);
 
-    final j = joy;
+    Widget potGroup = art;
     if (j != null) {
       // 화분 바닥(캔버스 높이의 약 92%)을 축으로 움직여 바닥에서 튀어 오르는 느낌을 준다.
       potGroup = Transform.translate(
@@ -192,7 +85,7 @@ class DecoratedPot extends StatelessWidget {
           transform: Matrix4.identity()
             ..rotateZ(j.angle)
             ..multiply(Matrix4.diagonal3Values(j.scaleX, j.scaleY, 1.0)),
-          child: potGroup,
+          child: art,
         ),
       );
     }
@@ -202,56 +95,20 @@ class DecoratedPot extends StatelessWidget {
         width: s,
         height: s,
         child: Stack(children: [
-          ...background,
-          Positioned.fill(child: potGroup),
-        ]),
-      ),
-    );
-  }
-}
-
-class _Pot extends StatelessWidget {
-  const _Pot({
-    required this.color,
-    required this.width,
-    required this.height,
-    required this.rimHeight,
-  });
-
-  final Color color;
-  final double width;
-  final double height;
-  final double rimHeight;
-
-  @override
-  Widget build(BuildContext context) {
-    final rim = HSLColor.fromColor(color)
-        .withLightness(
-            (HSLColor.fromColor(color).lightness - 0.06).clamp(0.0, 1.0))
-        .toColor();
-    return SizedBox(
-      width: width,
-      height: height,
-      child: Column(
-        children: [
-          Container(
-            height: rimHeight,
-            decoration: BoxDecoration(
-              color: rim,
-              borderRadius: BorderRadius.circular(rimHeight * 0.3),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              width: width * 0.9,
+          Positioned.fill(
+            child: DecoratedBox(
               decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(width * 0.2)),
+                color: ItemArt.background(
+                    id(DecorationCategory.background, 'bg_1') ?? 'bg_1'),
+                shape: BoxShape.circle,
               ),
             ),
           ),
-        ],
+          Positioned.fill(
+            child: CustomPaint(painter: PotShadowPainter(lift: j?.dy ?? 0)),
+          ),
+          Positioned.fill(child: potGroup),
+        ]),
       ),
     );
   }
